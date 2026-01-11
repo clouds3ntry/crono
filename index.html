@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crono - Cron Expression Generator & Validator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon-64.svg">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="text-slate-100 antialiased min-h-screen flex flex-col" style="height: auto; min-height: 100%;">
+
+    <!-- Header -->
+    <header class="w-full border-b border-slate-800 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-slate-50 rounded-md flex items-center justify-center text-slate-900">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="font-semibold text-slate-50 leading-none">Crono</h1>
+                    <p class="text-xs text-slate-400 mt-0.5 font-medium">Cron Expression Generator & Validator</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#" class="text-sm font-medium text-slate-400 hover:text-slate-100 transition-colors">Docs</a>
+                <a href="#" class="text-slate-500 hover:text-slate-100 transition-colors">
+                    <i data-lucide="github" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+
+        <!-- Primary Input Section -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <label for="cron-input" class="text-sm font-medium text-slate-300">Cron Expression</label>
+                <span id="validation-status" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20">
+                    <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+                    Valid Expression
+                </span>
+            </div>
+            
+            <div class="relative group">
+                <input type="text" id="cron-input" value="*/15 0 * * 1-5" 
+                    class="w-full bg-slate-800/50 border border-slate-700 text-slate-50 text-2xl sm:text-3xl font-mono p-4 sm:p-6 rounded-lg shadow-lg focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-all outline-none placeholder:text-slate-600"
+                    spellcheck="false" autocomplete="off">
+                
+                <button id="copy-btn" class="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-500 hover:text-slate-200 hover:bg-slate-700 rounded-md transition-all" title="Copy to clipboard">
+                    <i data-lucide="copy" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Field Legend (Visual Guide) -->
+            <div id="field-legend" class="grid grid-cols-5 gap-2 px-6 text-xs font-mono text-slate-500 select-none">
+                <div class="text-center"><span class="text-slate-200 font-medium">*/15</span><br>min</div>
+                <div class="text-center"><span class="text-slate-200 font-medium">0</span><br>hour</div>
+                <div class="text-center"><span class="text-slate-200 font-medium">*</span><br>day</div>
+                <div class="text-center"><span class="text-slate-200 font-medium">*</span><br>month</div>
+                <div class="text-center"><span class="text-slate-200 font-medium">1-5</span><br>week</div>
+            </div>
+        </section>
+
+        <!-- Explanation & Next Runs Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Human Readable Explanation -->
+            <section class="md:col-span-2 bg-slate-800/50 rounded-lg border border-slate-700 shadow-lg overflow-hidden flex flex-col">
+                <div class="px-5 py-4 border-b border-slate-700 bg-slate-800/80">
+                    <h2 class="text-sm font-medium text-slate-200 flex items-center gap-2">
+                        <i data-lucide="message-square" class="w-4 h-4 text-slate-400"></i>
+                        Human Readable
+                    </h2>
+                </div>
+                <div class="p-5 flex-1 flex items-center">
+                    <p id="human-readable" class="text-lg text-slate-300 leading-relaxed">
+                        At minute <span class="font-mono bg-slate-700 px-1 py-0.5 rounded text-slate-100 text-base">0</span>, 
+                        <span class="font-mono bg-slate-700 px-1 py-0.5 rounded text-slate-100 text-base">15</span>, 
+                        <span class="font-mono bg-slate-700 px-1 py-0.5 rounded text-slate-100 text-base">30</span>, and 
+                        <span class="font-mono bg-slate-700 px-1 py-0.5 rounded text-slate-100 text-base">45</span> 
+                        past hour <span class="font-mono bg-slate-700 px-1 py-0.5 rounded text-slate-100 text-base">0</span>, 
+                        on every day of the week from <span class="font-semibold text-slate-100">Monday through Friday</span>.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Next Executions -->
+            <section id="next-runs-section" class="bg-slate-800/50 rounded-lg border border-slate-700 shadow-lg overflow-hidden flex flex-col">
+                <div class="px-5 py-4 border-b border-slate-700 bg-slate-800/80 flex justify-between items-center">
+                    <h2 class="text-sm font-medium text-slate-200 flex items-center gap-2">
+                        <i data-lucide="calendar-clock" class="w-4 h-4 text-slate-400"></i>
+                        Next Runs
+                    </h2>
+                    <span id="timezone-label" class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Local Time</span>
+                </div>
+                <div class="p-2">
+                    <ul id="next-runs-list" class="space-y-1">
+                        <li class="px-3 py-2 rounded-md hover:bg-slate-700/50 flex justify-between items-center text-sm group cursor-default transition-colors">
+                            <span class="text-slate-400 font-mono">2023-10-24</span>
+                            <span class="text-slate-200 font-medium font-mono group-hover:text-primary-400">00:15:00</span>
+                        </li>
+                        <li class="px-3 py-2 rounded-md hover:bg-slate-700/50 flex justify-between items-center text-sm group cursor-default transition-colors">
+                            <span class="text-slate-400 font-mono">2023-10-24</span>
+                            <span class="text-slate-200 font-medium font-mono group-hover:text-primary-400">00:30:00</span>
+                        </li>
+                        <li class="px-3 py-2 rounded-md hover:bg-slate-700/50 flex justify-between items-center text-sm group cursor-default transition-colors">
+                            <span class="text-slate-400 font-mono">2023-10-24</span>
+                            <span class="text-slate-200 font-medium font-mono group-hover:text-primary-400">00:45:00</span>
+                        </li>
+                        <li class="px-3 py-2 rounded-md hover:bg-slate-700/50 flex justify-between items-center text-sm group cursor-default transition-colors">
+                            <span class="text-slate-400 font-mono">2023-10-25</span>
+                            <span class="text-slate-200 font-medium font-mono group-hover:text-primary-400">00:00:00</span>
+                        </li>
+                        <li class="px-3 py-2 rounded-md hover:bg-slate-700/50 flex justify-between items-center text-sm group cursor-default transition-colors">
+                            <span class="text-slate-400 font-mono">2023-10-25</span>
+                            <span class="text-slate-200 font-medium font-mono group-hover:text-primary-400">00:15:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- Presets -->
+        <section>
+            <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Quick Presets</h3>
+            <div class="flex flex-wrap gap-2">
+                <button data-preset="* * * * *" class="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-md transition-all shadow-sm">
+                    Every minute
+                </button>
+                <button data-preset="*/15 * * * 1-5" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-slate-900 text-sm font-medium rounded-md shadow-sm ring-2 ring-offset-2 ring-offset-slate-900 ring-slate-700">
+                    Every 15 mins, Mon-Fri
+                </button>
+                <button data-preset="0 * * * *" class="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-md transition-all shadow-sm">
+                    Hourly
+                </button>
+                <button data-preset="0 0 * * *" class="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-md transition-all shadow-sm">
+                    Daily at midnight
+                </button>
+                <button data-preset="0 0 * * 0" class="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-md transition-all shadow-sm">
+                    Weekly on Sunday
+                </button>
+                <button data-preset="0 0 1 * *" class="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-md transition-all shadow-sm">
+                    Monthly (1st day)
+                </button>
+            </div>
+        </section>
+
+        <!-- Visual Builder (Collapsible) -->
+        <section class="border border-slate-700 rounded-lg bg-slate-800/50 shadow-lg overflow-hidden">
+            <details class="group">
+                <summary class="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-700/50 transition-colors select-none">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4 text-slate-400"></i>
+                        <span class="text-sm font-medium text-slate-200">Visual Builder</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <span class="text-xs group-open:hidden">Expand to edit fields</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
+                    </div>
+                </summary>
+                
+                <div class="px-5 pb-6 pt-2 border-t border-slate-700">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                        
+                        <!-- Minute -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Minute</label>
+                            <input id="minute-input" type="text" value="*/15" class="w-full font-mono text-sm bg-slate-900/50 border border-slate-700 rounded-md px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent focus:bg-slate-900 transition-all">
+                            <p class="text-[10px] text-slate-500">0-59, *, /, -</p>
+                        </div>
+
+                        <!-- Hour -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Hour</label>
+                            <input id="hour-input" type="text" value="0" class="w-full font-mono text-sm bg-slate-900/50 border border-slate-700 rounded-md px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent focus:bg-slate-900 transition-all">
+                            <p class="text-[10px] text-slate-500">0-23, *, /, -</p>
+                        </div>
+
+                        <!-- Day of Month -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Day (Month)</label>
+                            <input id="day-input" type="text" value="*" class="w-full font-mono text-sm bg-slate-900/50 border border-slate-700 rounded-md px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent focus:bg-slate-900 transition-all">
+                            <p class="text-[10px] text-slate-500">1-31, *, /, -, ?, L, W</p>
+                        </div>
+
+                        <!-- Month -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Month</label>
+                            <input id="month-input" type="text" value="*" class="w-full font-mono text-sm bg-slate-900/50 border border-slate-700 rounded-md px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent focus:bg-slate-900 transition-all">
+                            <p class="text-[10px] text-slate-500">1-12, JAN-DEC, *, /</p>
+                        </div>
+
+                        <!-- Day of Week -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Day (Week)</label>
+                            <input id="weekday-input" type="text" value="1-5" class="w-full font-mono text-sm bg-slate-900/50 border border-slate-700 rounded-md px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent focus:bg-slate-900 transition-all">
+                            <p class="text-[10px] text-slate-500">0-6, SUN-SAT, *, /, -, ?, L, #</p>
+                        </div>
+
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-slate-700 flex justify-end">
+                        <button id="reset-btn" class="text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors">
+                            Reset to defaults
+                        </button>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-900/50 mt-auto">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-slate-500">
+                &copy; 2026 Crono. Open source for developers.
+            </p>
+            <div class="flex items-center gap-4">
+                <a href="#" class="text-xs text-slate-400 hover:text-slate-200">Privacy</a>
+                <a href="#" class="text-xs text-slate-400 hover:text-slate-200">Terms</a>
+                <a href="#" class="text-xs text-slate-400 hover:text-slate-200">API</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="js/app.js"></script>
+</body>
+</html>
