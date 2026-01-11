@@ -3,7 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crono - Cron Expression Generator & Validator</title>
+    <title>Crono – Cron Expression Generator & Validator | Online Cronjob Tool</title>
+    <meta name="description" content="Online cronjob tool to generate and validate cron expressions. Supports cronjob Linux, crontab schedules, and real-time cron validation.">
+    <meta name="keywords" content="cron job, cronjob linux, crontab linux, cron expression generator, cron expression validator, online cronjob, cron every 5 minutes">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Crono – Cron Expression Generator & Validator">
+    <meta property="og:description" content="Generate, validate, and preview cron jobs online for Linux using Crono.">
+    <meta property="og:url" content="https://crono.cloudsentry.in">
+    <meta property="og:type" content="website">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://crono.cloudsentry.in">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Crono",
+      "applicationCategory": "DeveloperTool",
+      "operatingSystem": "Linux",
+      "description": "Online cron expression generator and validator for Linux crontab scheduling.",
+      "url": "https://crono.cloudsentry.in"
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://crono.cloudsentry.in"
+      }]
+    }
+    </script>
+    
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I create a cron job that runs every 5 minutes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use the cron expression */5 * * * * to run a job every 5 minutes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cron expression for running a job every minute?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use * * * * * to run a cron job every minute."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I schedule a cron job to run every hour?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use 0 * * * * to run a cron job at the beginning of every hour."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does */15 0 * * 1-5 mean in crontab?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This cron expression runs every 15 minutes (0, 15, 30, 45) during hour 0 (midnight), on weekdays (Monday through Friday)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I validate a cron expression?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can validate cron expressions using online tools like Crono, which provides real-time validation and shows next execution times."
+          }
+        }
+      ]
+    }
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,12 +147,7 @@
                     <p class="text-xs text-slate-400 mt-0.5 font-medium">Cron Expression Generator & Validator</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="#" class="text-sm font-medium text-slate-400 hover:text-slate-100 transition-colors">Docs</a>
-                <a href="#" class="text-slate-500 hover:text-slate-100 transition-colors">
-                    <i data-lucide="github" class="w-5 h-5"></i>
-                </a>
-            </div>
+
         </div>
     </header>
 
@@ -253,12 +337,11 @@
     <footer class="border-t border-slate-800 bg-slate-900/50 mt-auto">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p class="text-xs text-slate-500">
-                &copy; 2026 Crono. Open source for developers.
+                &copy; 2026 Crono. Cron scheduling, simplified.
             </p>
             <div class="flex items-center gap-4">
                 <a href="#" class="text-xs text-slate-400 hover:text-slate-200">Privacy</a>
                 <a href="#" class="text-xs text-slate-400 hover:text-slate-200">Terms</a>
-                <a href="#" class="text-xs text-slate-400 hover:text-slate-200">API</a>
             </div>
         </div>
     </footer>
